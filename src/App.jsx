@@ -504,9 +504,7 @@ Continue the selected option.
 
 // ===== APP WRAPPER =====
 const App = () => (
-  <Router>
+  <Router basename="/icct.chatbot">
     <AppContent />
   </Router>
 );
-
-export default App;
