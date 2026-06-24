@@ -210,10 +210,6 @@ body.page-leave {
     display: flex;
   }
 
-  .navbar-toggle {
-    display: block;
-  }
-
   .navbar-toggle.active .bar:nth-child(2) {
     opacity: 0;
   }
@@ -634,7 +630,6 @@ margin: 0;
 padding: 0;
 }
 
-/* Fix main content */
 .hero-section {
 padding: 120px 20px 20px;
 margin-bottom: 25px;
@@ -648,7 +643,6 @@ font-size: clamp(28px, 5vw, 42px);
 font-size: clamp(14px, 2vw, 18px);
 }
 
-/* Fix Mission Vision cards */
 .content-layout {
 width: 100%;
 display: flex;
@@ -677,7 +671,6 @@ font-size: clamp(24px, 4vw, 30px);
 font-size: clamp(14px, 2vw, 15px);
 }
 
-/* Fix chatbot overlap */
 .aichat-popup {
 width: min(420px, calc(100vw - 30px));
 height: min(600px, calc(100vh - 120px));
