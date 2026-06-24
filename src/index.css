@@ -374,7 +374,7 @@ body.page-leave {
   border-radius: 50%;
 }
 
-.header-info .logotext {
+.header-info .logo-text {
   font-size: 1.31rem;
   font-weight: 600;
   color:#fff;
@@ -605,4 +605,242 @@ body.page-leave {
   margin-top: 38px;
   background: transparent;
   box-shadow: none;
+}
+
+
+* {
+  box-sizing: border-box;
+  }
+
+html, body, #root {
+width: 100%;
+min-height: 100%;
+overflow-x: hidden;
+}
+
+/* Fix navbar overlap */
+.navbar {
+height: auto;
+min-height: 80px;
+}
+
+.navbar-container {
+max-width: 100%;
+padding: 0 24px;
+}
+
+.navbar-menu {
+margin: 0;
+padding: 0;
+}
+
+/* Fix main content */
+.hero-section {
+padding: 120px 20px 20px;
+margin-bottom: 25px;
+}
+
+.hero-section h1 {
+font-size: clamp(28px, 5vw, 42px);
+}
+
+.hero-section p {
+font-size: clamp(14px, 2vw, 18px);
+}
+
+/* Fix Mission Vision cards */
+.content-layout {
+width: 100%;
+display: flex;
+justify-content: center;
+padding: 0 20px 40px;
+}
+
+.left-section {
+width: min(100%, 520px);
+margin: 0;
+gap: 20px;
+}
+
+.feature-card {
+width: 100%;
+max-width: 520px;
+min-height: auto;
+padding: 24px 22px;
+}
+
+.feature-card h3 {
+font-size: clamp(24px, 4vw, 30px);
+}
+
+.feature-card p {
+font-size: clamp(14px, 2vw, 15px);
+}
+
+/* Fix chatbot overlap */
+.aichat-popup {
+width: min(420px, calc(100vw - 30px));
+height: min(600px, calc(100vh - 120px));
+min-height: unset;
+right: 15px;
+bottom: 85px;
+z-index: 9999;
+display: flex;
+flex-direction: column;
+}
+
+.chat-body {
+flex: 1;
+height: auto;
+margin-bottom: 0;
+padding-bottom: 20px;
+}
+
+.chat-footer {
+position: relative;
+}
+
+/* Tablet */
+@media (max-width: 880px) {
+body > *:not(.navbar) {
+padding-top: 90px;
+}
+
+.navbar-container {
+height: 80px;
+}
+
+.navbar-menu {
+background: rgba(255, 255, 255, 0.9);
+z-index: 998;
+}
+
+.navbar-menu li a {
+color: #001489;
+}
+
+.bar {
+background: #001489;
+}
+
+.hero-section {
+padding-top: 110px;
+}
+}
+
+/* Phone */
+@media (max-width: 600px) {
+.navbar-logo-img,
+.navbar-logo {
+width: 65px;
+height: 65px;
+margin-top: 0;
+}
+
+.hero-section {
+padding: 95px 15px 15px;
+}
+
+.content-layout {
+padding: 0 12px 30px;
+}
+
+.feature-card {
+border-radius: 18px;
+padding: 20px 16px;
+}
+
+.aichat-popup {
+left: 10px;
+right: 10px;
+bottom: 75px;
+width: auto;
+height: min(560px, calc(100vh - 95px));
+}
+
+#chatbot-toggler {
+right: 20px;
+bottom: 20px;
+}
+
+.header-info .logotext {
+font-size: 1rem;
+}
+
+.message-text {
+max-width: 85%;
+font-size: 0.9rem;
+}
+}
+
+.about-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 100px 16px 40px;
+}
+
+.about-overlay {
+  width: min(100%, 1100px);
+  padding: clamp(24px, 5vw, 60px) clamp(18px, 4vw, 40px);
+  margin: 0 auto 30px;
+}
+
+.about-overlay h1 {
+  font-size: clamp(32px, 6vw, 64px);
+  line-height: 1.1;
+}
+
+.about-overlay p {
+  font-size: clamp(14px, 2vw, 20px);
+  line-height: 1.7;
+}
+
+.top-bar {
+  width: min(100%, 1100px);
+  padding: 20px 16px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.contact-item {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(6px);
+}
+
+.text {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* phone */
+@media (max-width: 600px) {
+  .about-page {
+    padding: 90px 12px 30px;
+  }
+
+  .about-overlay {
+    border-radius: 16px;
+  }
+
+  .top-bar {
+    grid-template-columns: 1fr;
+    padding: 12px 0;
+  }
+
+  .contact-item {
+    align-items: flex-start;
+  }
+
+  .icon-circle {
+    width: 48px;
+    height: 48px;
+  }
 }
