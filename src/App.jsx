@@ -1,7 +1,7 @@
 import ICCTlogo from "./assets/ICCTlogo.png";
 import { useState, useRef, useEffect } from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route,
   useNavigate,
@@ -504,7 +504,7 @@ Continue the selected option.
 
 // ===== APP WRAPPER =====
 const App = () => (
-  <Router basename="/icct.chatbot">
+  <Router>
     <AppContent />
   </Router>
 );
