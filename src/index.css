@@ -509,6 +509,8 @@ body {
   .navbar-logo {
     width: 58px;
     height: 58px;
+    position: static !important;
+    z-index: 1;
   }
 
   .hero-section {
