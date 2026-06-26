@@ -32,7 +32,6 @@ const Home = () => (
 
     <div className="content-layout">
       <div className="left-section">
-
         <div className="feature-card">
           <h3>ICCT Vision</h3>
 
@@ -60,31 +59,19 @@ const Home = () => (
             developing value-based individuals.
           </p>
         </div>
-
       </div>
     </div>
   </>
 );
 
 const AppContent = () => {
-  const [showAichat, setShowAichat] =
-    useState(false);
-
-  const [menuOpen, setMenuOpen] =
-    useState(false);
-
-  const [pageLeaving, setPageLeaving] =
-    useState(false);
-
-  const [chatHistory, setChatHistory] =
-    useState([]);
-
-  // ===== ANNOUNCEMENTS STATE - ADDED FROM OLD VERSION =====
-  const [announcements, setAnnouncements] =
-    useState([]);
+  const [showAichat, setShowAichat] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [pageLeaving, setPageLeaving] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
 
   const chatBodyRef = useRef(null);
-
   const navigate = useNavigate();
 
   // Scroll chat to bottom on update
@@ -95,47 +82,33 @@ const AppContent = () => {
     });
   }, [chatHistory]);
 
-  // ===== LOAD ANNOUNCEMENTS - ADDED FROM OLD VERSION =====
+  // ===== LOAD ANNOUNCEMENTS FROM RENDER BACKEND =====
   useEffect(() => {
     const loadAnnouncements = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3001/announcements"
+          "https://icct-chatbot-backend.onrender.com/announcements"
         );
 
         const data = await res.json();
 
         setAnnouncements(data);
 
-        console.log(
-          "Announcements loaded:",
-          data
-        );
+        console.log("Announcements loaded:", data);
       } catch (error) {
-        console.log(
-          "Announcement error:",
-          error
-        );
+        console.log("Announcement error:", error);
       }
     };
 
     loadAnnouncements();
 
-    const interval = setInterval(
-      loadAnnouncements,
-      60000
-    );
+    const interval = setInterval(loadAnnouncements, 60000);
 
-    return () =>
-      clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
 
   // Internal link transitions
-  const handleLinkClick = (
-    e,
-    href,
-    target
-  ) => {
+  const handleLinkClick = (e, href, target) => {
     if (
       target === "_blank" ||
       href.startsWith("http") ||
@@ -154,21 +127,15 @@ const AppContent = () => {
   };
 
   // ===== AI RESPONSE =====
-  const generateBotResponse = async (
-    updatedHistory
-  ) => {
-
+  const generateBotResponse = async (updatedHistory) => {
     if (!updatedHistory.length) return;
 
     try {
-
       // Thinking bubble
       setChatHistory((prev) => {
-
         if (
           prev.some(
-            (msg) =>
-              msg.text === "Thinking..."
+            (msg) => msg.text === "Thinking..."
           )
         ) {
           return prev;
@@ -181,34 +148,28 @@ const AppContent = () => {
             text: "Thinking...",
           },
         ];
-
       });
 
       // Create conversation memory
-      const conversation =
-        updatedHistory
-          .filter(
-            (msg) =>
-              msg.text !== "Thinking..."
-          )
-          .map((msg) => {
-
-            return `${
-              msg.role === "user"
-                ? "Student"
-                : "Assistant"
-            }:
+      const conversation = updatedHistory
+        .filter((msg) => msg.text !== "Thinking...")
+        .map((msg) => {
+          return `${
+            msg.role === "user"
+              ? "Student"
+              : "Assistant"
+          }:
 
 ${msg.text}`;
+        })
+        .join("\n\n");
 
-          })
-          .join("\n\n");
-
-      // ===== CREATE ANNOUNCEMENT CONTEXT - ADDED FROM OLD VERSION =====
+      // Create announcement context
       const announcementText =
         announcements.length > 0
           ? announcements
-              .map((post, index) => `
+              .map(
+                (post, index) => `
 Announcement ${index + 1}
 
 Title:
@@ -218,10 +179,10 @@ Category:
 ${post.category || "General"}
 
 Date:
-${post.date}
+${post.date || "No date available"}
 
 Content:
-${post.content}
+${post.content || "No content available"}
 
 Images:
 ${
@@ -231,14 +192,14 @@ ${
 }
 
 ----------------------------------------
-`)
+`
+              )
               .join("\n")
           : "No announcements found in the database.";
 
       // AI CALL
-      const response =
-        await puter.ai.chat(
-`${systemPrompt}
+      const response = await puter.ai.chat(
+        `${systemPrompt}
 
 
 ================================
@@ -264,121 +225,63 @@ Do not repeat the menu.
 
 Continue the selected option.
 `,
-          {
-            model: "gpt-4o-mini",
-          }
-        );
-
-      console.log(
-        "FULL RESPONSE:",
-        response
+        {
+          model: "gpt-4o-mini",
+        }
       );
+
+      console.log("FULL RESPONSE:", response);
 
       // Parse response
       let botReply = "";
 
       if (typeof response === "string") {
-
         botReply = response;
-
-      }
-
-      else if (
-        response?.message?.content
-      ) {
-
-        botReply =
-          response.message.content;
-
-      }
-
-      else if (
-        response?.content
-      ) {
-
-        botReply =
-          response.content;
-
-      }
-
-      else if (
-        response?.text
-      ) {
-
-        botReply =
-          response.text;
-
-      }
-
-      else {
-
-        botReply =
-          "No response.";
-
+      } else if (response?.message?.content) {
+        botReply = response.message.content;
+      } else if (response?.content) {
+        botReply = response.content;
+      } else if (response?.text) {
+        botReply = response.text;
+      } else {
+        botReply = "No response.";
       }
 
       // Replace thinking
       setChatHistory((prev) => [
-
         ...prev.filter(
-          (msg) =>
-            msg.text !== "Thinking..."
+          (msg) => msg.text !== "Thinking..."
         ),
-
         {
           role: "model",
           text: botReply,
-        }
-
+        },
       ]);
-
     } catch (error) {
-
-      console.error(
-        "Puter AI error:",
-        error
-      );
+      console.error("Puter AI error:", error);
 
       setChatHistory((prev) => [
-
         ...prev.filter(
-          (msg) =>
-            msg.text !== "Thinking..."
+          (msg) => msg.text !== "Thinking..."
         ),
-
         {
           role: "model",
-          text:
-            "Error: " + error.message,
-        }
-
+          text: "Error: " + error.message,
+        },
       ]);
-
     }
-
   };
 
   return (
     <div
       className={`about-page container ${
-        showAichat
-          ? "show-aichat"
-          : ""
-      } ${
-        pageLeaving
-          ? "page-leave"
-          : ""
-      }`}
+        showAichat ? "show-aichat" : ""
+      } ${pageLeaving ? "page-leave" : ""}`}
     >
-
       {/* ===== NAVBAR ===== */}
       <nav className="navbar">
         <div className="navbar-container">
-
-          <a
-            href="#/"
-            className="logo-link"
-          >
+          <a href="#/" className="logo-link">
             <img
               src={ICCTlogo}
               alt="ICCT Logo"
@@ -388,14 +291,10 @@ Continue the selected option.
 
           <button
             className={`navbar-toggle ${
-              menuOpen
-                ? "active"
-                : ""
+              menuOpen ? "active" : ""
             }`}
             onClick={() =>
-              setMenuOpen(
-                (prev) => !prev
-              )
+              setMenuOpen((prev) => !prev)
             }
           >
             <span className="bar"></span>
@@ -405,30 +304,15 @@ Continue the selected option.
 
           <ul
             className={`navbar-menu ${
-              menuOpen
-                ? "active"
-                : ""
+              menuOpen ? "active" : ""
             }`}
           >
             <li>
-              <a href="#/">
-                Home
-              </a>
+              <a href="#/">Home</a>
             </li>
 
             <li>
-              <a
-                href="/about"
-                onClick={(e) =>
-                  handleLinkClick(
-                    e,
-                    "/about",
-                    "_self"
-                  )
-                }
-              >
-                About
-              </a>
+              <a href="#/about">About</a>
             </li>
 
             <li>
@@ -456,24 +340,15 @@ Continue the selected option.
 
       {/* ===== ROUTES ===== */}
       <Routes>
-        <Route
-          path="/"
-          element={<Home />}
-        />
-
-        <Route
-          path="/about"
-          element={<About />}
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
       </Routes>
 
       {/* ===== CHAT TOGGLER ===== */}
       <button
         id="chatbot-toggler"
         onClick={() =>
-          setShowAichat(
-            (prev) => !prev
-          )
+          setShowAichat((prev) => !prev)
         }
       >
         <span>💬</span>
@@ -483,7 +358,6 @@ Continue the selected option.
       {/* ===== AI CHAT POPUP ===== */}
       <div className="aichat-popup">
         <div className="chat-header">
-
           <div className="header-info">
             <AiChatBotIcon />
 
@@ -493,22 +367,15 @@ Continue the selected option.
           </div>
 
           <button
-            onClick={() =>
-              setShowAichat(false)
-            }
+            onClick={() => setShowAichat(false)}
             className="material-symbols-outlined"
           >
             keyboard_arrow_down
           </button>
         </div>
 
-        <div
-          className="chat-body"
-          ref={chatBodyRef}
-        >
-
-          {chatHistory.length ===
-            0 && (
+        <div className="chat-body" ref={chatBodyRef}>
+          {chatHistory.length === 0 && (
             <div className="message bot-message">
               <AiChatBotIcon />
 
@@ -520,25 +387,16 @@ Continue the selected option.
             </div>
           )}
 
-          {chatHistory.map(
-            (chat, index) => (
-              <ChatMessage
-                key={index}
-                chat={chat}
-              />
-            )
-          )}
+          {chatHistory.map((chat, index) => (
+            <ChatMessage key={index} chat={chat} />
+          ))}
         </div>
 
         <div className="chat-footer">
           <ChatForm
             chatHistory={chatHistory}
-            setChatHistory={
-              setChatHistory
-            }
-            generateBotResponse={
-              generateBotResponse
-            }
+            setChatHistory={setChatHistory}
+            generateBotResponse={generateBotResponse}
           />
         </div>
       </div>
