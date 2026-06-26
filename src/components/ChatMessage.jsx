@@ -1,6 +1,5 @@
 import { useState } from "react";
 import AiChatBotIcon from "./AiChatBotIcon";
-import ReactMarkdown from "react-markdown";
 
 const ChatMessage = ({ chat }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -22,13 +21,8 @@ const ChatMessage = ({ chat }) => {
         {chat.role === "model" && <AiChatBotIcon />}
 
         <div className="message-text">
+          <p>{chat.text || ""}</p>
 
-          {/* TEXT */}
-          <ReactMarkdown>
-            {chat.text || ""}
-          </ReactMarkdown>
-
-          {/* IMAGE */}
           {chat.image && (
             <img
               src={getSrc(chat.image)}
@@ -43,11 +37,9 @@ const ChatMessage = ({ chat }) => {
               }}
             />
           )}
-
         </div>
       </div>
 
-      {/* MODAL */}
       {selectedImage && (
         <div className="image-modal" onClick={() => setSelectedImage(null)}>
           <img src={selectedImage} alt="full" />
