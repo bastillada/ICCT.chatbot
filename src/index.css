@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght=0,100..900;1,100..900&display=swap');
 
 * {
   box-sizing: border-box;
@@ -21,16 +21,39 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: pageEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes pageEnter {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+body.page-leave {
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: all 0.4s ease;
 }
 
 /* MAIN CONTAINER */
 .about-page {
   width: 100%;
   min-height: 100vh;
+  flex: 1;
   padding: 95px 16px 40px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  z-index: 1;
 }
 
 /* NAVBAR */
@@ -68,6 +91,7 @@ body {
   height: 75px;
   object-fit: contain;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 .navbar-menu {
@@ -86,12 +110,15 @@ body {
   font-weight: 800;
   padding: 6px 14px;
   border-radius: 20px;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
   white-space: nowrap;
 }
 
 .navbar-menu li a:hover {
   color: #ffffff;
   background: rgba(0, 20, 137, 0.75);
+  border-color: #001489;
 }
 
 .navbar-toggle {
@@ -266,6 +293,8 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease;
 }
 
 #chatbot-toggler span {
@@ -367,6 +396,12 @@ body {
   border-radius: 50%;
   cursor: pointer;
   background: none;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.chat-header button:hover {
+  opacity: 1;
 }
 
 .chat-body {
@@ -392,6 +427,7 @@ body {
   padding: 12px 16px;
   font-size: 0.95rem;
   margin: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .bot-message .message-text {
@@ -468,6 +504,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s ease;
+}
+
+.chat-form:focus-within {
+  outline-color: #001489;
+}
+
+.message-input:valid ~ button,
+.chat-form:focus-within button,
+.chat-form:focus-within label {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* IMAGE MODAL */
@@ -531,10 +581,12 @@ body {
 
   .navbar-toggle.active .bar:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
+    background: #c8102e;
   }
 
   .navbar-toggle.active .bar:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
+    background: #c8102e;
   }
 }
 
@@ -617,5 +669,63 @@ body {
 
   .chat-footer {
     padding: 12px 14px 16px;
+  }
+}
+
+
+/* =====================================================
+   EXTRA ADDITIONS FROM CLASSMATE VERSION - MERGED SAFELY
+   ===================================================== */
+
+/* This supports components that use className="about" instead of about-overlay only. */
+.about {
+  padding-top: 20px;
+  width: 100%;
+}
+
+.about h1 {
+  color: #ffffff;
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  text-align: center;
+  font-weight: 900;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  margin-bottom: 20px;
+}
+
+.about p {
+  color: #ffffff;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  line-height: 1.7;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+  font-weight: 500;
+}
+
+.top-bar .text {
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+/* Desktop-only left offset from classmate code, but kept safe so mobile will not break. */
+@media (min-width: 1024px) {
+  .content-layout {
+    justify-content: flex-start;
+  }
+
+  .left-section {
+    margin-left: clamp(40px, 9vw, 140px);
+    align-items: flex-start;
+  }
+}
+
+/* Extra smaller-phone navbar sizing from classmate code. */
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0 1rem;
+  }
+
+  .navbar-menu li a {
+    font-size: 1.2rem;
+    padding: 3px 15px;
   }
 }
