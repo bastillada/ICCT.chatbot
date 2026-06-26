@@ -1,4 +1,3 @@
-Copy everything below and replace the contents of src/prompt.js.
 // prompt.js
  
 const systemPrompt = `
