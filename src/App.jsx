@@ -1,7 +1,7 @@
 import ICCTlogo from "./assets/ICCTlogo.png";
 import { useState, useRef, useEffect } from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route,
   useNavigate,
@@ -78,10 +78,6 @@ const AppContent = () => {
 
   const [chatHistory, setChatHistory] =
     useState([]);
-    
-    const [announcements, setAnnouncements] =
-    useState([]);
-
 
   const chatBodyRef = useRef(null);
 
@@ -94,50 +90,6 @@ const AppContent = () => {
       behavior: "smooth",
     });
   }, [chatHistory]);
-  useEffect(() => {
-
-  const loadAnnouncements = async () => {
-
-    try {
-
-      const res = await fetch(
-        "http://localhost:3001/announcements"
-      );
-
-      const data = await res.json();
-
-      setAnnouncements(data);
-console.log(
-"Announcements loaded:",
-data
-);
-
-    } catch (error) {
-
-      console.log(
-        "Announcement error:",
-        error
-      );
-
-    }
-
-  };
-
-
-  loadAnnouncements();
-
-
-  const interval = setInterval(
-    loadAnnouncements,
-    60000
-  );
-
-
-  return () =>
-    clearInterval(interval);
-
-
-}, []);
 
   // Internal link transitions
   const handleLinkClick = (
@@ -219,53 +171,10 @@ ${msg.text}`;
 
 
 
-// Create announcement context
-
-const announcementText =
-announcements.length > 0
-? announcements
-.map((post,index)=>`
-
-Announcement ${index + 1}
-
-Title:
-${post.title || "ICCT Announcement"}
-
-Category:
-${post.category || "General"}
-
-Date:
-${post.date}
-
-Content:
-${post.content}
-
-Images:
-${
-post.images && post.images.length > 0
-? post.images.join("\n")
-: "No images"
-}
-
-----------------------------------------
-`)
-.join("\n")
-: "No announcements found in the database.";
-
-
-
-// AI CALL
-
-const response =
-await puter.ai.chat(
+    // AI CALL
+    const response =
+      await puter.ai.chat(
 `${systemPrompt}
-
-
-================================
-LATEST ICCT ANNOUNCEMENTS
-================================
-
-${announcementText}
 
 
 ================================
@@ -284,10 +193,10 @@ Do not repeat the menu.
 
 Continue the selected option.
 `,
-{
- model:"gpt-4o-mini",
-}
-);
+        {
+          model: "gpt-4o-mini",
+        }
+      );
 
 
 
@@ -364,27 +273,28 @@ Continue the selected option.
 
   } catch (error) {
 
-console.error(
-  "Puter AI error:",
-  error
-);
+    console.error(
+      "Puter AI error:",
+      error
+    );
 
 
-setChatHistory((prev)=>[
+    setChatHistory((prev) => [
 
-...prev.filter(
-(msg)=>msg.text !== "Thinking..."
-),
+      ...prev.filter(
+        (msg) =>
+          msg.text !== "Thinking..."
+      ),
 
-{
-role:"model",
-text:
-"Error: " + error.message,
-}
+      {
+        role: "model",
+        text:
+          "Sorry, something went wrong.",
+      }
 
-]);
+    ]);
 
-}
+  }
 
 };
 
@@ -406,16 +316,9 @@ text:
         <div className="navbar-container">
 
           <a
-            href="/"
-            className="logo-link"
-            onClick={(e) =>
-              handleLinkClick(
-                e,
-                "/",
-                "_self"
-              )
-            }
-          >
+  href="#/"
+  className="logo-link"
+>
             <img
               src={ICCTlogo}
               alt="ICCT Logo"
@@ -448,17 +351,8 @@ text:
             }`}
           >
             <li>
-              <a
-                href="/"
-                onClick={(e) =>
-                  handleLinkClick(
-                    e,
-                    "/",
-                    "_self"
-                  )
-                }
-              >
-                Home
+              <a href="#/">
+           Home
               </a>
             </li>
 
@@ -483,7 +377,7 @@ text:
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                B-board
+                Blackboard
               </a>
             </li>
 
@@ -493,7 +387,7 @@ text:
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Portal
+                ICCT Portal
               </a>
             </li>
           </ul>
